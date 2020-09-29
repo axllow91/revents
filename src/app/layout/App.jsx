@@ -8,12 +8,14 @@ import HomePage from "../../features/home/HomePage";
 import EventDetailedPage from "../../features/events/eventDetailed/EventDetailedPage";
 import EventForm from "../../features/events/eventForm/EventForm";
 import Sandbox from "../../features/sandbox/Sandbox";
+import ModalManager from "../common/modals/Manager";
 
 function App() {
   const { key } = useLocation();
 
   return (
     <>
+      <ModalManager />
       <Route exact path="/" component={HomePage} />
       {/* anything that has a forward slash plus something else we want to render anything else that is below */}
       <Route

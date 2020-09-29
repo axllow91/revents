@@ -1,43 +1,29 @@
-import React, { useState } from "react";
-import { Menu, MenuItem, Container, Button } from "semantic-ui-react";
-import { NavLink, useHistory } from "react-router-dom";
+import React from "react";
+import { Menu, Container, Button } from "semantic-ui-react";
+import { NavLink } from "react-router-dom";
 import SignedOutMenu from "./SignedOutMenu";
 import SignedInMenu from "./SignedInMenu";
+import { useSelector } from "react-redux";
 
-function NavBar() {
-  const history = useHistory(); // now we have access to the history
-  const [authenticated, setAuthenticated] = useState(false);
-
-  function handleSignOut() {
-    setAuthenticated(false);
-    history.push("/");
-  }
+export default function NavBar() {
+  const { authenticated } = useSelector((state) => state.auth);
 
   return (
     <Menu inverted fixed="top">
       <Container>
-        <MenuItem as={NavLink} exact to="/" header>
-          <img src="/assets/images/logo.png" alt="logo" />
+        <Menu.Item as={NavLink} exact to="/" header>
+          <img src="/assets/logo.png" alt="logo" style={{ marginRight: 15 }} />
           Re-vents
-        </MenuItem>
-        <MenuItem as={NavLink} to="/events" name="Events" />
-        <MenuItem as={NavLink} to="/sandbox" name="Sandbox" />
+        </Menu.Item>
+        <Menu.Item as={NavLink} to="/events" name="Events" />
+        <Menu.Item as={NavLink} to="/sandbox" name="Sandbox" />
         {authenticated && (
-          <MenuItem as={NavLink} to="/createEvent">
-            {/* if we want to call the setFormOpen(true) only like this the App component will try to load and immediatly call this function
-                so we need an anonymous function () => setFormOpen(true) that will call the method only when we are trying to click the button
-            */}
+          <Menu.Item as={NavLink} to="/createEvent">
             <Button positive inverted content="Create Event" />
-          </MenuItem>
+          </Menu.Item>
         )}
-        {authenticated ? (
-          <SignedInMenu signOut={handleSignOut} />
-        ) : (
-          <SignedOutMenu setAuthenticated={setAuthenticated} />
-        )}
+        {authenticated ? <SignedInMenu /> : <SignedOutMenu />}
       </Container>
     </Menu>
   );
 }
-
-export default NavBar;

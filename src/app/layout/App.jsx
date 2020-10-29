@@ -9,6 +9,7 @@ import EventDetailedPage from "../../features/events/eventDetailed/EventDetailed
 import EventForm from "../../features/events/eventForm/EventForm";
 import Sandbox from "../../features/sandbox/Sandbox";
 import ModalManager from "../common/modals/Manager";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const { key } = useLocation();
@@ -16,6 +17,7 @@ function App() {
   return (
     <>
       <ModalManager />
+      <ToastContainer position="bottom-right" hideProgressBar/>
       <Route exact path="/" component={HomePage} />
       {/* anything that has a forward slash plus something else we want to render anything else that is below */}
       <Route

@@ -1,0 +1,30 @@
+import React from "react";
+import { Button, Placeholder, Segment } from "semantic-ui-react";
+
+export default function EventListItemPlaceholder() {
+  return (
+    <Placeholder fluid>
+      <Segment.Group>
+        <Segment style={{ minHeight: 110 }}>
+          <Placeholder.Header image>
+            <Placeholder.Line />
+            <Placeholder.Line />
+          </Placeholder.Header>
+          <Placeholder.Paragraph>
+            <Placeholder.Line />
+          </Placeholder.Paragraph>
+        </Segment>
+        <Segment>
+          <Placeholder>
+            <Placeholder.Line />
+            <Placeholder.Line />
+          </Placeholder>
+        </Segment>
+        <Segment secondary style={{ minHeight: 70 }} />
+        <Segment clearing>
+          <Button disabled color="blue" floated="right" content="view" />
+        </Segment>
+      </Segment.Group>
+    </Placeholder>
+  );
+}

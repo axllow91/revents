@@ -8,8 +8,11 @@ import { decrement, increment } from "./testReducer";
 
 export default function Sandbox() {
   const dispatch = useDispatch();
+  const [target, setTarget] = useState(null);
   // A hook to access the redux store's state. This hook takes a selector function as an argument. The selector is called with the store state.
   const data = useSelector((state) => state.test.data);
+
+  const { loading } = useSelector((state) => state.async);
 
   const defaultProps = {
     center: {
@@ -30,13 +33,23 @@ export default function Sandbox() {
       <h1>Testing 1,2,3</h1>
       <h3>The data is: {data}</h3>
       <Button
-        onClick={() => dispatch(increment(10))}
+        name="increment"
+        loading={loading && target === "increment"} // load if we decrement
+        onClick={(e) => {
+          dispatch(increment(10));
+          setTarget(e.target.name); // make sure we display the loading if we are doing the loading
+        }}
         content="Increment"
         color="green"
       />
 
       <Button
-        onClick={() => dispatch(decrement(5))}
+        name="decrement"
+        loading={loading && target === "decrement"} // load if we decrement
+        onClick={(e) => {
+          dispatch(decrement(5));
+          setTarget(e.target.name); // make sure we display the loading if we are doing the loading
+        }}
         content="Decrement"
         color="red"
       />

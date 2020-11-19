@@ -1,10 +1,9 @@
 /* global google */
 import React from "react";
 import { Segment, Header, Button } from "semantic-ui-react";
-import cuid from "cuid";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createEvent, updateEvent } from "../eventActions";
+import {listenToEvents } from "../eventActions";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import MyTextInput from "../../../app/common/form/MyTextInput";
@@ -13,9 +12,19 @@ import MySelectInput from "../../../app/common/form/MySelectInput";
 import { categoryData } from "../../../app/api/categoryOptions";
 import MyDateInput from "../../../app/common/form/MyDateInput";
 import MyPlaceInput from "../../../app/common/form/MyPlaceInput";
+import {
+  addEventToFirestore,
+  listenToEventFromFirestore,
+  updateEventInFirestore,
+} from "../../../app/firestore/firestoreService";
+import useFirestoreDoc from "../../../app/hooks/useFirestoreDoc";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
+import { toast } from "react-toastify";
 
 export default function EventForm({ match, history }) {
   const dispatch = useDispatch();
+
+  const { loading, error } = useSelector((state) => state.async);
 
   const selectedEvent = useSelector((state) =>
     state.event.events.find((e) => e.id === match.params.id)
@@ -50,24 +59,38 @@ export default function EventForm({ match, history }) {
     date: Yup.string().required(),
   });
 
+  // while trying to refresh the event form page we are going to lose the information
+  // that we want to manage (edit)
+  // so we need to make a query into the firestore document to have the information visible on the form
+  useFirestoreDoc({
+    shouldExecute: !!match.params.id, // casted to a boolean
+    query: () => listenToEventFromFirestore(match.params.id),
+    data: (event) => dispatch(listenToEvents([event])),
+    deps: [match.params.id, dispatch],
+  });
+
+  if (loading)
+    return <LoadingComponent content="Loading event..." />;
+
+  if (error) return <Redirect to="/error" />;
+
   return (
     <Segment clearing>
       <Formik
         initialValues={initialValues}
-        onSubmit={(values) => {
-          // update the values into the selected event
-          selectedEvent
-            ? dispatch(updateEvent({ ...selectedEvent, ...values }))
-            : // otherwise create event
-              dispatch(
-                createEvent({
-                  ...values,
-                  id: cuid(),
-                  hostedBy: "Bob",
-                  attendees: [],
-                })
-              );
-          history.push("/events");
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            // update the values into the selected event
+            selectedEvent
+              ? await updateEventInFirestore(values)
+              : // otherwise create event
+                await addEventToFirestore(values);
+            setSubmitting(false);
+            history.push("/events");
+          } catch (error) {
+            toast.error(error.message);
+            setSubmitting(false);
+          }
         }}
         validationSchema={validationSchema}
       >

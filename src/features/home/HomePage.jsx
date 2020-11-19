@@ -9,10 +9,6 @@ import {
 } from "semantic-ui-react";
 
 export default function HomePage({ history }) {
-  // function navigateToEvents() {
-  //   history.push('/events');
-  // }
-
   return (
     <Segment inverted textAlign="center" vertical className="masthead">
       <Container>

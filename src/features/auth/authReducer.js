@@ -12,8 +12,11 @@ export default function authReducer(state = initialState, { type, payload }) {
         ...state,
         authenticated: true,
         currentUser: {
-          email: 'bob@test.com',
-          photoURL: "/assets/images/user.png",
+          email: payload.email,
+          photoURL: payload.photoURL,
+          uid: payload.uid,
+          displayName: payload.displayName,
+          providerId: payload.providerData[0].providerId,
         },
       };
     case SIGN_OUT_USER:

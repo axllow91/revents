@@ -10,14 +10,21 @@ import EventForm from "../../features/events/eventForm/EventForm";
 import Sandbox from "../../features/sandbox/Sandbox";
 import ModalManager from "../common/modals/Manager";
 import { ToastContainer } from "react-toastify";
+import ErrorComponent from "../common/errors/ErrorComponent";
+import AccountPage from "../../features/auth/AccountPage";
+import { useSelector } from "react-redux";
+import LoadingComponent from "./LoadingComponent";
 
 function App() {
   const { key } = useLocation();
+  const { initialized } = useSelector((state) => state.async);
+
+  if (!initialized) return <LoadingComponent content="Loading app..." />;
 
   return (
     <>
       <ModalManager />
-      <ToastContainer position="bottom-right" hideProgressBar/>
+      <ToastContainer position="bottom-right" hideProgressBar />
       <Route exact path="/" component={HomePage} />
       {/* anything that has a forward slash plus something else we want to render anything else that is below */}
       <Route
@@ -34,6 +41,8 @@ function App() {
                 component={EventForm}
                 key={key}
               />
+              <Route path="/account" component={AccountPage} />
+              <Route path="/error" component={ErrorComponent} />
             </Container>
           </>
         )}

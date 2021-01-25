@@ -12,9 +12,9 @@ import { toast } from "react-toastify";
 import { signOutFirebase } from "../../app/firestore/firebaseService";
 
 export default function SignedInMenu() {
-  const { currentUser } = useSelector((state) => state.auth);
+  const { currentUserProfile } = useSelector((state) => state.profile);
   const history = useHistory();
-  console.log(useSelector((state) => state.auth));
+  // console.log(useSelector((state) => state.auth));
 
   // is async because we want to wait for the user to be signout
   // before to be pushed to the new location (home screen )
@@ -32,9 +32,9 @@ export default function SignedInMenu() {
       <Image
         avatar
         spaced="right"
-        src={currentUser.photoURL || "/assets/images/user.png"}
+        src={currentUserProfile.photoURL || "/assets/images/user.png"}
       />
-      <Dropdown pointing="top left" text={currentUser.displayName}>
+      <Dropdown pointing="top left" text={currentUserProfile.displayName}>
         <DropdownMenu>
           <DropdownItem
             as={Link}
@@ -42,7 +42,12 @@ export default function SignedInMenu() {
             text="Create event"
             icon="plus"
           />
-          <DropdownItem text="My Profile" icon="user" />
+          <DropdownItem
+            as={Link}
+            to={`/profile/${currentUserProfile.id}`}
+            icon="user"
+            text="My Profile"
+          />
           <DropdownItem
             as={Link}
             to="/account"

@@ -12,7 +12,7 @@ export default function NavBar() {
     <Menu inverted fixed="top">
       <Container>
         <Menu.Item as={NavLink} exact to="/" header>
-          <img src="/assets/logo.png" alt="logo" style={{ marginRight: 15 }} />
+          <img src="/assets/images/logo.png" alt="logo" style={{ marginRight: 15 }} />
           Re-vents
         </Menu.Item>
         <Menu.Item as={NavLink} to="/events" name="Events" />

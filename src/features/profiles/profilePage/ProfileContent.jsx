@@ -1,17 +1,22 @@
 import React from "react";
 import { Tab } from "semantic-ui-react";
 import AboutTab from "./AboutTab";
+import PhotosTab from "./PhotosTab";
 
 export default function ProfileContent({ profile, isCurrentUser }) {
   // array with our tab panes
   const panes = [
     {
       menuItem: "About",
-      render: () => <AboutTab profile={profile} isCurrentUser={isCurrentUser}/>,
+      render: () => (
+        <AboutTab profile={profile} isCurrentUser={isCurrentUser} />
+      ),
     },
     {
       menuItem: "Photos",
-      render: () => <Tab.Pane>Photos</Tab.Pane>,
+      render: () => (
+        <PhotosTab profile={profile} isCurrentUser={isCurrentUser} />
+      ),
     },
     {
       menuItem: "Events",
@@ -32,6 +37,7 @@ export default function ProfileContent({ profile, isCurrentUser }) {
       menu={{ fluid: true, vertical: true }}
       menuPosition="right"
       panes={panes}
+      activeIndex={1}
     />
   );
 }
